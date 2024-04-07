@@ -36,7 +36,7 @@ if __name__ == "__main__":
     rho  = rho[ip_start:ip_end]
     temp = temp[ip_start:ip_end]
     
-    for frame_id, frame in enumerate(frames[10:]):
+    for frame_id, frame in enumerate(frames):
         cam = frame_to_camera(frame)
         w, h, p = raw_to_clip(cam, rho, hsml, pos, npix_x, npix_y)
         hi, pi = clip_to_canvas(h, p, npix_x, npix_y)
