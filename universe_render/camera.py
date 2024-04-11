@@ -2,7 +2,24 @@ import numpy as np
 from numba import jit
 
 class Camera(object):
-    def __init__(self, pos, taD, up=np.array([0, 1, 0]), fov=90, zNear=0.1, zFar=5000):
+    def __init__(self, pos, taD, up=np.array([0, 0, 1]), fov=90, zNear=0.1, zFar=5000):
+        """
+        Create a "Camera" object. The implementation follows the notation in OpenGL.
+        See https://learnopengl.com/Getting-started/Camera for a visualization.
+        pos:   np.array([3, ])
+               The position of camera in the coordinate space.
+        taD:   np.array([3, ])
+               The direction of camera pointing. Note this is different from OpenGL, 
+               where this "direction vector" points the opposite direction
+        up:    np.array([3, ])
+               The "up" axis. help to set the camera coordinate system.
+        fov:   float
+               field-of-view in degree. This FOV is along the horizontal direction
+        zNear: float
+               the z-axis truncation at the near end.
+        zFar:  float 
+               the z-axis truncation at the far end.
+        """
         self.pos = pos
         self.taD_ = taD # this is the direction the camera pointing
         self.taD = self.norm(-taD) # this is the direction of +z in camera coordi system
@@ -15,6 +32,9 @@ class Camera(object):
         self.zFar  = zFar
 
     def look_at_matrix(self): # aka view matrix
+        """
+        Return the look at matrix (aka view matrix) of the camera object.
+        """
         A = np.array([[self.riD[0], self.riD[1], self.riD[2], 0          ], 
                        [self.upD[0], self.upD[1], self.upD[2], 0          ],
                        [self.taD[0], self.taD[1], self.taD[2], 0          ],
@@ -28,6 +48,8 @@ class Camera(object):
     @classmethod
     def project_matrix(cls, l, r, b, t, n, f):
         """
+        Return the project matrix for any input l, r, b, t, n, f.
+
         l - left (<0)
         r - right (>0)
         t - top (>0)
@@ -43,14 +65,34 @@ class Camera(object):
 
     @classmethod
     def project_matrix_sym(cls, r, t, n, f):
+        """
+        Return the project matrix for any input r, t, n, f.
+        Assuming l = -r, b = -t.
+
+        r - right (>0)
+        b - bottom (<0)
+        n - near
+        f - far
+        """
         return cls.project_matrix(-r, r, -t, t, n, f)
 
     def project_matrix_from_fov(self):
+        """
+        Return the project matrix based on the camera's FOV. 
+        """
         r1 = np.tan(self.fov / 2)
         t1 = np.tan(self.fov / 2)
         return self.project_matrix_sym(r1*self.zNear, t1*self.zNear, self.zNear, self.zFar)
 
     def to_clip(self, h, pos_4):
+        """
+        Convert the particle 4-position & hsml in the scene into the clip space.
+        h:     np.array([n_part, ])
+               the hsml of particles in the coordinate space.
+        pos_4: np.array([4, n_part])
+               the 4-position of particles in the coordinate space.
+               For a given 3-pos (x, y, z), its corresponding 4-pos is (x, y, z, 1).
+        """
         view_pos_4 = self.look_at_matrix() @ pos_4
         clip_pos_4 = self.project_matrix_from_fov() @ view_pos_4
         w = clip_pos_4[3]
@@ -59,6 +101,25 @@ class Camera(object):
         return clip_h, clip_pos_4
 
     def to_mask_clip(self, weight, h, pos_4, clip_x=1, clip_y=1):
+        """
+        Convert the particle 4-position & hsml in the scene into the clip space by calling self.to_mask.
+        AND apply a mask to select the particels for render.
+        
+        weight: np.array([n_part, ])
+                the weight array for each particle. This can be density or temperature for example.
+        h:      np.array([n_part, ])
+                the hsml of particles in the coordinate space.
+        pos_4:  np.array([4, n_part])
+                the 4-position of particles in the coordinate space.
+                For a given 3-pos (x, y, z), its corresponding 4-pos is (x, y, z, 1).
+        clip_x: float
+        clip_y: float
+                determine the x-y region for render as following:
+                [(-clip_x, clip_y) --- ( clip_x, clip_y)]
+                [                                       ]
+                [                                       ]
+                [(-clip_x,-clip_y) --- ( clip_x,-clip_y)]
+        """
         clip_h, clip_coord = self.to_clip(h, pos_4)
         clip_h = np.array(clip_h)
         mask = (clip_coord[0]>-clip_x) * (clip_coord[0]<clip_x) * (clip_coord[1]>-clip_y) * (clip_coord[1]<clip_y) * (clip_coord[2]>-1) * (clip_coord[2]<1)

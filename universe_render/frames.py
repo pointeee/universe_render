@@ -4,6 +4,14 @@ from scipy.interpolate import interp1d
 import hashlib
 from camera import Camera
 
+############
+## Frames ##
+############
+# Note: One frame is actually a numpy array, which contains 
+#       all the parameter for creation of new camera object.
+#       Frame  = (t, posx, posy, posz, dirx, diry, dirz, fov, n, f)
+#       Frames = list of frames
+
 # to determine the prefix in the saved files
 def hash_file(filename):
     """"This function returns the SHA-1 hash
@@ -27,6 +35,9 @@ def hash_file(filename):
 
 # convert frame into to a camera object
 def frame_to_camera(frame):
+    """
+    Parse one frame and convert it into a camera object.
+    """
     time = frame[0]
     posc = frame[1:4]
     dirc = frame[4:7]
@@ -38,11 +49,17 @@ def frame_to_camera(frame):
 
 # frame io
 def read_frame_file(filename):
+    """
+    Read frames from a given file.
+    """
     with open(filename) as f:
         lines = f.readlines()[1:]
     return np.array([[float(_) for _ in line.split()] for line in lines])
 
 def write_frame_file(frames, filename):
+    """
+    Write frames into a given file.
+    """
     with open(filename, "w") as f:
         f.write("# t, posx, posy, posz, dirx, diry, dirz, fov, n, f\n")
         for frame in frames:
@@ -50,6 +67,9 @@ def write_frame_file(frames, filename):
 
 # frame interpolation
 def keyframes_to_all_frames(kf, timestep=1):
+    """
+    Interpolate between the keyframes provided.
+    """
     n_kf = kf.shape[0]
     time = kf[:,0]
     posc = kf[:,1:4]

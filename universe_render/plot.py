@@ -3,6 +3,11 @@ import matplotlib.pyplot as plt
 
 from config import tmp_path
 
+####################
+## Plot Functions ##
+####################
+# Note: PLZ define yours yourself
+
 def rho_map(arr, fn, ftype="jpg"):
     dpi=240
     fig = plt.figure(figsize=(arr.shape[0]/dpi, arr.shape[1]/dpi), dpi=dpi)
