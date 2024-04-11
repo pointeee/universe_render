@@ -2,7 +2,7 @@ import math
 import numpy as np 
 import numba 
 from numba import njit
-import numba_mpi
+# import numba_mpi
 
 from config import sph_kernel, npix_x, npix_y
 
