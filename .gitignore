@@ -6,5 +6,5 @@
 /movies/
 /__pycache__/
 /universe_render/__pycache__/
-*.ipynb
+/*.ipynb
 universe_render.egg-info
