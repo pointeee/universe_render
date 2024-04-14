@@ -1,6 +1,9 @@
 import numpy as np
 
 def from_npy(filename):
+    """
+    This is the data format used in the example. 
+    """
     data = np.load(filename).T
     n_part = data.shape[0]
     hsml = data[:,5]

@@ -1,7 +1,7 @@
 from camera import Camera, raw_to_clip, clip_to_canvas
 from snap_io import from_npy
-from render import render_cpu
-from config import npix_x, npix_y, data_path, frames_path
+from render import render_func_factory
+from config import sph_kernel, npix_x, npix_y, data_path, frames_path, tmp_path
 from plot import rho_map
 from frames import hash_file, read_frame_file, frame_to_camera
 
@@ -16,6 +16,8 @@ comm = MPI.COMM_WORLD
 
 size = comm.Get_size()
 rank = comm.Get_rank()
+
+render_cpu = render_func_factory(sph_kernel, npix_x, npix_y)
 
 if __name__ == "__main__":
     # read frame info
@@ -46,6 +48,6 @@ if __name__ == "__main__":
         comm.Barrier()
         grid_tot = comm.reduce(grid, MPI.SUM, 0)
         if rank == 0:
-            np.save(f"../tmp/{file_prefix}_image_{str(frame_id).zfill(4)}.npy", grid_tot)
+            np.save(f"{tmp_path}/{file_prefix}_image_{str(frame_id).zfill(4)}.npy", grid_tot)
             image_fn = f"{file_prefix}_image_{str(frame_id).zfill(4)}"
-            rho_map(grid_tot, image_fn)
+            rho_map(grid_tot, image_fn, tmp_path)

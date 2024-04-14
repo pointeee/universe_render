@@ -1,14 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from config import tmp_path
-
 ####################
 ## Plot Functions ##
 ####################
 # Note: PLZ define yours yourself
 
-def rho_map(arr, fn, ftype="jpg"):
+def rho_map(arr, fn, tmp_path, ftype="jpg"):
     dpi=240
     fig = plt.figure(figsize=(arr.shape[0]/dpi, arr.shape[1]/dpi), dpi=dpi)
     axes=fig.add_axes([0,0,1,1])    
