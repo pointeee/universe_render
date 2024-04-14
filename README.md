@@ -37,5 +37,5 @@ This will allow you to run the code and edit it conveniently when necessary (thi
 
 ## Usage
 
-Please refer the documentation and [the exmaple notebooks](./exmaples).
+Please refer the documentation and [the example notebooks](./examples).
 
