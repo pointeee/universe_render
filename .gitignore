@@ -1,7 +1,10 @@
 .ipynb_checkpoints
+/*/.ipynb_checkpoints
 *.pbs
+/data/
 /tmp/
 /movies/
-/code/__pycache__/
+/__pycache__/
+/universe_render/__pycache__/
 *.ipynb
-*.egg-info/
+universe_render.egg-info

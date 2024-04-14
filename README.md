@@ -18,6 +18,7 @@ Required System Installation: mpi environment (for multi-process support), FFmpe
 - [ ] More kernels
 - [ ] GPU accelerate support
 
+<<<<<<< HEAD
 ## Installation 
 
 First, clone this repo to your machine
@@ -34,3 +35,9 @@ pip install -e .
 ```
 
 This will allow you to run the code and edit it conveniently when necessary (this is common at this stage).
+
+## Usage
+
+Please refer the documentation and [the exmaple notebooks](./exmaples).
+=======
+>>>>>>> parent of 8c3f1dc (update readme.md)
