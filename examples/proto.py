@@ -11,11 +11,6 @@ import matplotlib.pyplot as plt
 import warnings
 warnings.simplefilter('ignore')
 
-from mpi4py import MPI
-comm = MPI.COMM_WORLD
-
-size = comm.Get_size()
-rank = comm.Get_rank()
 
 render_cpu = render_func_factory(sph_kernel, npix_x, npix_y)
 
@@ -51,3 +46,5 @@ if __name__ == "__main__":
             np.save(f"{tmp_path}/{file_prefix}_image_{str(frame_id).zfill(4)}.npy", grid_tot)
             image_fn = f"{file_prefix}_image_{str(frame_id).zfill(4)}"
             rho_map(grid_tot, image_fn, tmp_path)
+            
+    

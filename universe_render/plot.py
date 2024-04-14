@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 ####################
 # Note: PLZ define yours yourself
 
-def rho_map(arr, fn, tmp_path, ftype="jpg"):
+def rho_map(arr, fn, ftype="jpg"):
     dpi=240
     fig = plt.figure(figsize=(arr.shape[0]/dpi, arr.shape[1]/dpi), dpi=dpi)
     axes=fig.add_axes([0,0,1,1])    
