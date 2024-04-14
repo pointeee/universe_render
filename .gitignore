@@ -4,3 +4,4 @@
 /movies/
 /code/__pycache__/
 *.ipynb
+*.egg-info/

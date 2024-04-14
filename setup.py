@@ -22,8 +22,8 @@ setup(
     install_requires=[
         'numpy',
         'scipy',
-        'numpy-quaternion', 
-        'numba',
-        'mpi4py'
+        'numpy-quaternion>=2023.0.3', 
+        'numba>=0.59.1',
+        'mpi4py>=3.1.5',
     ],
 )

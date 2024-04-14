@@ -18,3 +18,19 @@ Required System Installation: mpi environment (for multi-process support), FFmpe
 - [ ] More kernels
 - [ ] GPU accelerate support
 
+## Installation 
+
+First, clone this repo to your machine
+
+```shell
+git clone git@github.com:pointeee/universe_render.git
+```
+
+Then, install with `pip`
+
+```shell
+cd universe_render
+pip install -e .
+```
+
+This will allow you to run the code and edit it conveniently when necessary (this is common at this stage).
