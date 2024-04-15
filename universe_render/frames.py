@@ -2,7 +2,7 @@ import numpy as np
 import quaternion
 from scipy.interpolate import interp1d
 import hashlib
-from camera import Camera
+from .camera import Camera
 
 ############
 ## Frames ##
@@ -66,10 +66,16 @@ def write_frame_file(frames, filename):
             f.write("{:=+8E} {:=+8E} {:=+8E} {:=+8E} {:=+8E} {:=+8E} {:=+8E} {:=+8E} {:=+8E} {:=+8E}\n".format(*frame))
 
 # frame interpolation
-def keyframes_to_all_frames(kf, timestep=1):
+def keyframes_to_all_frames(kf, timestep=1, loop=False, kind="cubic"):
     """
     Interpolate between the keyframes provided.
     """
+    if loop:
+        dt = np.diff(kf[:,0])[0]
+        kf0 = kf[0] + 0
+        kf0[0] = dt + kf[-1, 0]
+        kf = np.vstack([kf, kf0])
+    
     n_kf = kf.shape[0]
     time = kf[:,0]
     posc = kf[:,1:4]
@@ -79,16 +85,16 @@ def keyframes_to_all_frames(kf, timestep=1):
     farc = kf[:,9:10]
 
     time_interp = np.arange(time[0], time[-1], timestep)
-    posc_interp = interp1d(time, posc, kind='cubic', axis=0)(time_interp)
+    posc_interp = interp1d(time, posc, kind=kind, axis=0)(time_interp)
     dirc_interp = []
     for i in range(n_kf-1):
         v_s, v_e = dirc[i], dirc[i+1]
         nstep = int((time[i+1]-time[i]) / timestep)
         dirc_interp += interp_rot(v_s, v_e, nstep)
     dirc_interp = np.array(dirc_interp)
-    fovc_interp = interp1d(time, fovc, kind='cubic', axis=0)(time_interp)
-    neac_interp = interp1d(time, neac, kind='cubic', axis=0)(time_interp)
-    farc_interp = interp1d(time, farc, kind='cubic', axis=0)(time_interp)
+    fovc_interp = interp1d(time, fovc, kind=kind, axis=0)(time_interp)
+    neac_interp = interp1d(time, neac, kind=kind, axis=0)(time_interp)
+    farc_interp = interp1d(time, farc, kind=kind, axis=0)(time_interp)
     
     time_interp = np.expand_dims(time_interp, 1)
 

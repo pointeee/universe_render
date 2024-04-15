@@ -8,3 +8,5 @@
 /universe_render/__pycache__/
 /*.ipynb
 universe_render.egg-info
+*.txt
+
