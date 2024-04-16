@@ -18,7 +18,7 @@ def render_func_factory(sph_kernel_hinv, npix_x, npix_y, use_hinv=False):
             for ix in range(ix_start, ix_end):
                 for iy in range(iy_start, iy_end):
                     r = dist(p[ip,0], p[ip,1], ix, iy)
-                    grid[ix, iy] = sph_kernel_hinv(r, hinv[ip])*w[ip] + grid[ix, iy]
+                    grid[ix, iy] = sph_kernel_hinv(r, h_inv[ip])*w[ip] + grid[ix, iy]
         return grid
     else:
     @njit

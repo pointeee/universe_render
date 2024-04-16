@@ -9,7 +9,6 @@ from numba import jit
 #       2. use @jit(nopython=True) to enable numba compilation
 #       3. numba only supports a limited number of math functions
 
-
 @jit(nopython=True)
 def cubic_spline_2D(r, h):
     """
