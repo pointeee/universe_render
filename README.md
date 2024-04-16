@@ -39,3 +39,6 @@ This will allow you to run the code and edit it conveniently when necessary (thi
 
 Please refer the documentation and [the example notebooks](./examples).
 
+## Contribute to This Project
+
+This mini project is still in its early stage; PRs and issues are welcomed!
