@@ -9,7 +9,6 @@ from numba import jit
 #       2. use @jit(nopython=True) to enable numba compilation
 #       3. numba only supports a limited number of math functions
 
-
 @jit(nopython=True)
 def cubic_spline_2D(r, h):
     """
@@ -40,3 +39,5 @@ def cubic_spline_2D_hinv(r, hinv):
     else:
         val = 1 - 1.5 * q * q * (1 - 0.5 * q)
     return val * fac
+
+kernels = {"cubic_spline_2D":cubic_spline_2D, "cubic_spline_2D_hinv":cubic_spline_2D_hinv}

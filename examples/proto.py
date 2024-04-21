@@ -1,22 +1,37 @@
-from camera import Camera, raw_to_clip, clip_to_canvas
-from snap_io import from_npy
-from render import render_func_factory
-from config import sph_kernel, npix_x, npix_y, data_path, frames_path, tmp_path
-from plot import rho_map
-from frames import hash_file, read_frame_file, frame_to_camera
+from universe_render.camera import Camera, raw_to_clip, clip_to_canvas
+from universe_render.snap_io import from_npy
+from universe_render.render import render_func_factory
+from universe_render.plot import rho_map # redua
+from universe_render.sph_kernels import kernels
+from universe_render.frames import hash_file, read_frame_file, frame_to_camera
 
 import numpy as np
+import configparser
 import matplotlib.pyplot as plt
 
 import warnings
 warnings.simplefilter('ignore')
 
+config = configparser.ConfigParser()
+config.read('Config.cfg')
+npix_x = int(config["setting"]["npix_x"])
+npix_y = int(config["setting"]["npix_y"])
+
+data_path = config["path"]["data_path"]
+frames_path = config["path"]["frames_path"]
+tmp_path = config["path"]["tmp_path"]
+file_prefix = config["path"]["file_prefix"]
+
+hinv=bool(config["processing"]["hinv"])
+if hinv:
+    sph_kernel = kernels[config["setting"]["sph_kernel"]+"_hinv"]
+else:
+    sph_kernel = kernels[config["setting"]["sph_kernel"]]
 
 render_cpu = render_func_factory(sph_kernel, npix_x, npix_y)
 
 if __name__ == "__main__":
     # read frame info
-    file_prefix = hash_file(frames_path)[0:8]
     frames = read_frame_file(frames_path)
     n_frame = frames.shape[0]
     
