@@ -39,3 +39,5 @@ def cubic_spline_2D_hinv(r, hinv):
     else:
         val = 1 - 1.5 * q * q * (1 - 0.5 * q)
     return val * fac
+
+kernels = {"cubic_spline_2D":cubic_spline_2D, "cubic_spline_2D_hinv":cubic_spline_2D_hinv}
