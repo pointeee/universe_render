@@ -12,5 +12,5 @@ def rho_map(arr, fn, ftype="jpg"):
     axes=fig.add_axes([0,0,1,1])    
     plt.imshow(np.log10(arr).T, cmap="cubehelix", origin='lower',clim=(-9, -4))
     axes.set_axis_off()
-    plt.savefig(f"{tmp_path}/{fn}.{ftype}", bbox_inches='tight', pad_inches=0)
+    plt.savefig(fn, bbox_inches='tight', pad_inches=0)
     plt.close()

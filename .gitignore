@@ -9,4 +9,4 @@
 /*.ipynb
 universe_render.egg-info
 *.txt
-
+/examples/*.txt

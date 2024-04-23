@@ -1,14 +1,23 @@
 import math
 import numpy as np 
 import numba 
-from numba import njit
+from numba import njit, float64
+
+import warnings
 
 @njit
 def dist(x1, y1, x2, y2):
     return math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2))
 
 def render_func_factory(sph_kernel, npix_x, npix_y, use_hinv=False):
+    """
+    A factory function to generate a render function.
+    
+    """
     if use_hinv:
+        warnings.warn("Using hinv option. Please ensure the SPH kernel take hinv as input.")
+        sph_kernel_hinv = sph_kernel
+        @njit(float64[:,:](float64[:], float64[:], float64[:], float64[:,:], float64[:,:]))
         def render_cpu(w, h, h_inv, p, grid):
             nx, ny = npix_x, npix_y
             npart = w.size
@@ -21,7 +30,7 @@ def render_func_factory(sph_kernel, npix_x, npix_y, use_hinv=False):
                         grid[ix, iy] = sph_kernel_hinv(r, h_inv[ip])*w[ip] + grid[ix, iy]
             return grid
     else:
-        @njit
+        @njit(float64[:,:](float64[:], float64[:], float64[:,:], float64[:,:]))
         def render_cpu(w, h, p, grid):
             nx, ny = npix_x, npix_y
             npart = w.size
